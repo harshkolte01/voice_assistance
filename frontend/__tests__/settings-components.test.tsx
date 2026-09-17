@@ -163,7 +163,7 @@ describe('Settings Presentational Components & SessionsScreen', () => {
     });
 
     await act(async () => {
-      fetchImpl.mockImplementation((url: string, init?: RequestInit) => {
+      fetchImpl.mockImplementation((url: string, _init?: RequestInit) => {
         if (url.endsWith('/auth/login')) {
           return response(200, {
             token_type: 'bearer',

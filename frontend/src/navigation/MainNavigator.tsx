@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { strings } from '../i18n/strings';
 import { AppText } from '../components/ui/Primitives';
-import { BottomTabBar, PrimaryTabRoute } from '../components/navigation/BottomTabBar';
+import { BottomTabBar } from '../components/navigation/BottomTabBar';
 import { AssistantScreen } from '../screens/AssistantScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { DiagnosticScreen } from '../screens/DiagnosticScreen';
@@ -14,7 +14,7 @@ import { TasksScreen } from '../screens/TasksScreen';
 import { useAuth } from '../auth/AuthProvider';
 import { useVoiceSocket } from '../voice/VoiceSocketProvider';
 import { useAppTheme } from '../design/ThemeProvider';
-import { radii, shadows, spacing, typography } from '../design/tokens';
+import { shadows, spacing, typography } from '../design/tokens';
 
 export type MainRoute =
   | 'assistant'

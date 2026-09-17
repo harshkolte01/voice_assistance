@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: 'center',
-    height: 52,
+    alignSelf: 'stretch',
     justifyContent: 'center',
     marginLeft: spacing.md,
     width: 20,

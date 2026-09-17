@@ -76,7 +76,12 @@ yarn-error.log
 /frontend/coverage
 
 # Local work records
-
+/docs/*
+!/docs/
+!/docs/phase_1_status_report.md
+!/docs/20260917_172859_stt_speech_end_grace_fix.md
+!/docs/20260917_173828_start_turn_session_race_fix.md
+!/docs/20260917_180239_auth_field_layout_fix.md
 
 # Production conversation projections contain private user content and stay local.
 /conversation_logs/

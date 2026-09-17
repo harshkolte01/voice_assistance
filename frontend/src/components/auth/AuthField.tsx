@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import React from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -64,8 +64,6 @@ export function AuthField({
   ...inputProps
 }: AuthFieldProps) {
   const { colors } = useAppTheme();
-  const [isFocused, setIsFocused] = useState(false);
-
   return (
     <View style={[styles.wrapper, containerStyle]}>
       <Text style={[styles.label, { color: colors.textMuted }]}>{label}</Text>
@@ -74,35 +72,21 @@ export function AuthField({
         style={[
           styles.inputContainer,
           {
-            backgroundColor: isFocused ? colors.surface : colors.surfaceLow,
-            borderColor: error
-              ? colors.error
-              : isFocused
-              ? colors.primary
-              : colors.borderSubtle,
+            backgroundColor: colors.surfaceLow,
+            borderColor: error ? colors.error : colors.borderSubtle,
           },
-          isFocused ? { shadowColor: colors.primary } : null,
         ]}
       >
         {icon ? (
           <View style={styles.iconContainer}>
-            <FieldIcon
-              color={isFocused ? colors.primary : colors.textSubtle}
-              type={icon}
-            />
+            <FieldIcon color={colors.textSubtle} type={icon} />
           </View>
         ) : null}
 
         <TextInput
           {...inputProps}
-          onBlur={event => {
-            setIsFocused(false);
-            onBlur?.(event);
-          }}
-          onFocus={event => {
-            setIsFocused(true);
-            onFocus?.(event);
-          }}
+          onBlur={onBlur}
+          onFocus={onFocus}
           placeholderTextColor={colors.textSubtle}
           selectionColor={colors.primary}
           textAlignVertical="center"
@@ -143,9 +127,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     minHeight: 54,
     position: 'relative',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.1,
-    shadowRadius: 7,
   },
   iconContainer: {
     alignItems: 'center',

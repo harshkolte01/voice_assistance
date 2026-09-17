@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   StyleProp,
   StyleSheet,
@@ -11,13 +11,46 @@ import {
 import { useAppTheme } from '../../design/ThemeProvider';
 import { radii, spacing, typography } from '../../design/tokens';
 
+export type AuthFieldIcon = 'email' | 'lock' | 'person';
+
 export type AuthFieldProps = TextInputProps & {
   label: string;
-  icon?: string;
+  icon?: AuthFieldIcon;
   rightElement?: React.ReactNode;
   containerStyle?: StyleProp<ViewStyle>;
   error?: string | null;
 };
+
+function FieldIcon({ type, color }: { type: AuthFieldIcon; color: string }) {
+  if (type === 'email') {
+    return (
+      <View style={[styles.emailIcon, { borderColor: color }]}>
+        <View
+          style={[
+            styles.emailFlap,
+            { borderBottomColor: color, borderRightColor: color },
+          ]}
+        />
+      </View>
+    );
+  }
+
+  if (type === 'person') {
+    return (
+      <View style={styles.personIcon}>
+        <View style={[styles.personHead, { borderColor: color }]} />
+        <View style={[styles.personBody, { borderColor: color }]} />
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.lockIcon}>
+      <View style={[styles.lockShackle, { borderColor: color }]} />
+      <View style={[styles.lockBody, { borderColor: color }]} />
+    </View>
+  );
+}
 
 export function AuthField({
   label,
@@ -48,27 +81,31 @@ export function AuthField({
               ? colors.primary
               : colors.borderSubtle,
           },
+          isFocused ? { shadowColor: colors.primary } : null,
         ]}
       >
         {icon ? (
           <View style={styles.iconContainer}>
-            <Text style={[styles.iconText, { color: colors.textSubtle }]}>
-              {icon}
-            </Text>
+            <FieldIcon
+              color={isFocused ? colors.primary : colors.textSubtle}
+              type={icon}
+            />
           </View>
         ) : null}
 
         <TextInput
           {...inputProps}
-          onBlur={e => {
+          onBlur={event => {
             setIsFocused(false);
-            onBlur?.(e);
+            onBlur?.(event);
           }}
-          onFocus={e => {
+          onFocus={event => {
             setIsFocused(true);
-            onFocus?.(e);
+            onFocus?.(event);
           }}
           placeholderTextColor={colors.textSubtle}
+          selectionColor={colors.primary}
+          textAlignVertical="center"
           style={[
             styles.textInput,
             { color: colors.text },
@@ -95,41 +132,38 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   label: {
-    fontSize: typography.caption,
+    fontSize: typography.label,
     fontWeight: '600',
-    letterSpacing: 0.6,
-    marginBottom: spacing.xs,
-    paddingHorizontal: spacing.xxs,
-    textTransform: 'uppercase',
+    marginBottom: spacing.sm,
   },
   inputContainer: {
     alignItems: 'center',
     borderRadius: radii.md,
     borderWidth: 1.5,
     flexDirection: 'row',
-    minHeight: 52,
+    minHeight: 54,
     position: 'relative',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.1,
+    shadowRadius: 7,
   },
   iconContainer: {
     alignItems: 'center',
-    height: '100%',
+    height: 52,
     justifyContent: 'center',
-    paddingLeft: spacing.sm,
-    width: 36,
-  },
-  iconText: {
-    fontSize: 16,
-    lineHeight: 20,
+    marginLeft: spacing.md,
+    width: 20,
   },
   textInput: {
     flex: 1,
     fontSize: typography.body,
-    minHeight: 52,
+    height: 52,
+    includeFontPadding: false,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    paddingVertical: 0,
   },
   textInputWithIcon: {
-    paddingLeft: spacing.xs,
+    paddingLeft: spacing.sm,
   },
   textInputWithRight: {
     paddingRight: spacing.xs,
@@ -137,11 +171,70 @@ const styles = StyleSheet.create({
   rightContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingRight: spacing.xs,
+    paddingRight: spacing.sm,
   },
   errorText: {
     fontSize: typography.caption,
-    marginTop: spacing.xxs,
-    paddingHorizontal: spacing.xxs,
+    marginTop: spacing.xs,
+  },
+  emailIcon: {
+    borderRadius: 3,
+    borderWidth: 1.7,
+    height: 14,
+    overflow: 'hidden',
+    position: 'relative',
+    width: 18,
+  },
+  emailFlap: {
+    borderBottomWidth: 1.4,
+    borderRightWidth: 1.4,
+    height: 11,
+    left: 2,
+    position: 'absolute',
+    top: -6,
+    transform: [{ rotate: '45deg' }],
+    width: 11,
+  },
+  personIcon: {
+    alignItems: 'center',
+    height: 20,
+    justifyContent: 'flex-end',
+    width: 20,
+  },
+  personHead: {
+    borderRadius: radii.full,
+    borderWidth: 1.7,
+    height: 7,
+    position: 'absolute',
+    top: 1,
+    width: 7,
+  },
+  personBody: {
+    borderBottomWidth: 0,
+    borderRadius: 7,
+    borderWidth: 1.7,
+    height: 9,
+    width: 15,
+  },
+  lockIcon: {
+    alignItems: 'center',
+    height: 20,
+    justifyContent: 'flex-end',
+    width: 20,
+  },
+  lockShackle: {
+    borderBottomWidth: 0,
+    borderRadius: 6,
+    borderWidth: 1.7,
+    height: 9,
+    position: 'absolute',
+    top: 1,
+    width: 11,
+  },
+  lockBody: {
+    borderRadius: 3,
+    borderWidth: 1.7,
+    height: 10,
+    width: 16,
   },
 });

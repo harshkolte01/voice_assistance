@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { ClientError, safeUserMessage, toClientError } from '../api/errors';
 import { useAuth } from '../auth/AuthProvider';
 import { AuthBrandHeader } from '../components/auth/AuthBrandHeader';
 import { AuthCard } from '../components/auth/AuthCard';
 import { AuthField } from '../components/auth/AuthField';
+import { AuthScaffold } from '../components/auth/AuthScaffold';
 import {
   ActionButton,
   AppText,
-  Screen,
   StatusBanner,
 } from '../components/ui/Primitives';
 import { useAppTheme } from '../design/ThemeProvider';
@@ -69,157 +69,149 @@ export function RegisterScreen({
   };
 
   return (
-    <Screen testID="register-screen">
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        keyboardShouldPersistTaps="handled"
-        showsVerticalScrollIndicator={false}
-      >
-        <View style={styles.container}>
-          <AuthBrandHeader
-            subtitle={strings.auth.registerBody}
-            title={strings.auth.registerTitle}
-          />
+    <AuthScaffold testID="register-screen">
+      <AuthBrandHeader
+        subtitle={strings.auth.registerBody}
+        title={strings.auth.registerTitle}
+      />
 
-          <AuthCard>
-            {error ? (
-              <View style={styles.bannerSpacing}>
-                <StatusBanner tone="error">{error}</StatusBanner>
-              </View>
-            ) : null}
+      <AuthCard>
+        {error ? (
+          <View style={styles.bannerSpacing}>
+            <StatusBanner tone="error">{error}</StatusBanner>
+          </View>
+        ) : null}
 
-            <AuthField
-              accessibilityLabel={strings.auth.name}
-              autoCapitalize="words"
-              autoComplete="name"
-              autoCorrect={false}
-              icon="👤"
-              label={strings.auth.name}
-              onChangeText={setName}
-              placeholder={strings.auth.name}
-              textContentType="name"
-              value={name}
-            />
+        <AuthField
+          accessibilityLabel={strings.auth.name}
+          autoCapitalize="words"
+          autoComplete="name"
+          autoCorrect={false}
+          icon="person"
+          label={strings.auth.name}
+          onChangeText={setName}
+          placeholder={strings.auth.name}
+          textContentType="name"
+          value={name}
+        />
 
-            <AuthField
-              accessibilityLabel={strings.auth.email}
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect={false}
-              icon="✉"
-              keyboardType="email-address"
-              label={strings.auth.email}
-              onChangeText={setEmail}
-              placeholder={strings.auth.email}
-              textContentType="emailAddress"
-              value={email}
-            />
+        <AuthField
+          accessibilityLabel={strings.auth.email}
+          autoCapitalize="none"
+          autoComplete="email"
+          autoCorrect={false}
+          icon="email"
+          keyboardType="email-address"
+          label={strings.auth.email}
+          onChangeText={setEmail}
+          placeholder={strings.auth.email}
+          textContentType="emailAddress"
+          value={email}
+        />
 
-            <AuthField
-              accessibilityLabel={strings.auth.password}
-              autoCapitalize="none"
-              autoComplete="new-password"
-              icon="🔒"
-              label={strings.auth.password}
-              onChangeText={setPassword}
-              placeholder={strings.auth.password}
-              rightElement={
-                <Pressable
-                  accessibilityLabel={
-                    showPassword
-                      ? strings.auth.hidePassword
-                      : strings.auth.showPassword
-                  }
-                  accessibilityRole="button"
-                  hitSlop={spacing.xs}
-                  onPress={() => setShowPassword(current => !current)}
-                  style={styles.visibilityButton}
-                >
-                  <AppText style={[styles.visibilityText, { color: colors.primary }]}>
-                    {showPassword
-                      ? strings.auth.hidePassword
-                      : strings.auth.showPassword}
-                  </AppText>
-                </Pressable>
+        <AuthField
+          accessibilityLabel={strings.auth.password}
+          autoCapitalize="none"
+          autoComplete="new-password"
+          icon="lock"
+          label={strings.auth.password}
+          onChangeText={setPassword}
+          placeholder={strings.auth.password}
+          rightElement={
+            <Pressable
+              accessibilityLabel={
+                showPassword
+                  ? strings.auth.hidePassword
+                  : strings.auth.showPassword
               }
-              secureTextEntry={!showPassword}
-              textContentType="newPassword"
-              value={password}
-            />
-
-            <AuthField
-              accessibilityLabel={strings.auth.confirmPassword}
-              autoCapitalize="none"
-              autoComplete="new-password"
-              icon="🔒"
-              label={strings.auth.confirmPassword}
-              onChangeText={setConfirmPassword}
-              placeholder={strings.auth.confirmPassword}
-              rightElement={
-                <Pressable
-                  accessibilityLabel={
-                    showConfirmPassword
-                      ? strings.auth.hidePassword
-                      : strings.auth.showPassword
-                  }
-                  accessibilityRole="button"
-                  hitSlop={spacing.xs}
-                  onPress={() => setShowConfirmPassword(current => !current)}
-                  style={styles.visibilityButton}
-                >
-                  <AppText style={[styles.visibilityText, { color: colors.primary }]}>
-                    {showConfirmPassword
-                      ? strings.auth.hidePassword
-                      : strings.auth.showPassword}
-                  </AppText>
-                </Pressable>
-              }
-              secureTextEntry={!showConfirmPassword}
-              textContentType="newPassword"
-              value={confirmPassword}
-            />
-
-            <ActionButton
-              disabled={submitting}
-              label={
-                submitting
-                  ? strings.auth.creatingAccount
-                  : strings.auth.createAccount
-              }
-              onPress={submit}
-              style={styles.submit}
-            />
-
-            {/* Ceramic divider */}
-            <View style={styles.dividerRow}>
-              <View
-                style={[
-                  styles.dividerLine,
-                  { backgroundColor: colors.borderSubtle },
-                ]}
-              />
-            </View>
-
-            <View style={styles.accountPrompt}>
-              <AppText style={{ color: colors.textMuted }}>
-                {strings.auth.alreadyHaveAccount}
-              </AppText>
-              <Pressable
-                accessibilityLabel={strings.auth.signIn}
-                accessibilityRole="button"
-                hitSlop={spacing.xs}
-                onPress={onSignIn}
-                testID="sign-in-link"
+              accessibilityRole="button"
+              hitSlop={spacing.xs}
+              onPress={() => setShowPassword(current => !current)}
+              style={styles.visibilityButton}
+            >
+              <AppText
+                style={[styles.visibilityText, { color: colors.primary }]}
               >
-                <AppText style={[styles.link, { color: colors.primary }]}>
-                  {strings.auth.signIn}
-                </AppText>
-              </Pressable>
-            </View>
-          </AuthCard>
+                {showPassword ? 'Hide' : 'Show'}
+              </AppText>
+            </Pressable>
+          }
+          secureTextEntry={!showPassword}
+          textContentType="newPassword"
+          value={password}
+        />
+
+        <AuthField
+          accessibilityLabel={strings.auth.confirmPassword}
+          autoCapitalize="none"
+          autoComplete="new-password"
+          icon="lock"
+          label={strings.auth.confirmPassword}
+          onChangeText={setConfirmPassword}
+          placeholder={strings.auth.confirmPassword}
+          rightElement={
+            <Pressable
+              accessibilityLabel={
+                showConfirmPassword
+                  ? strings.auth.hidePassword
+                  : strings.auth.showPassword
+              }
+              accessibilityRole="button"
+              hitSlop={spacing.xs}
+              onPress={() => setShowConfirmPassword(current => !current)}
+              style={styles.visibilityButton}
+            >
+              <AppText
+                style={[styles.visibilityText, { color: colors.primary }]}
+              >
+                {showConfirmPassword ? 'Hide' : 'Show'}
+              </AppText>
+            </Pressable>
+          }
+          secureTextEntry={!showConfirmPassword}
+          textContentType="newPassword"
+          value={confirmPassword}
+        />
+
+        <ActionButton
+          disabled={submitting}
+          label={
+            submitting
+              ? strings.auth.creatingAccount
+              : strings.auth.createAccount
+          }
+          onPress={submit}
+          style={styles.submit}
+        />
+
+        {/* Ceramic divider */}
+        <View style={styles.dividerRow}>
+          <View
+            style={[
+              styles.dividerLine,
+              { backgroundColor: colors.borderSubtle },
+            ]}
+          />
         </View>
-      </ScrollView>
-    </Screen>
+
+        <View style={styles.accountPrompt}>
+          <AppText style={{ color: colors.textMuted }}>
+            {strings.auth.alreadyHaveAccount}
+          </AppText>
+          <Pressable
+            accessibilityLabel={strings.auth.signIn}
+            accessibilityRole="button"
+            hitSlop={spacing.xs}
+            onPress={onSignIn}
+            testID="sign-in-link"
+          >
+            <AppText style={[styles.link, { color: colors.primary }]}>
+              {strings.auth.signIn}
+            </AppText>
+          </Pressable>
+        </View>
+      </AuthCard>
+    </AuthScaffold>
   );
 }
 
@@ -237,17 +229,6 @@ function registerErrorMessage(error: ClientError): string {
 }
 
 const styles = StyleSheet.create({
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingVertical: spacing.lg,
-  },
-  container: {
-    alignSelf: 'center',
-    maxWidth: 440,
-    paddingHorizontal: spacing.md,
-    width: '100%',
-  },
   bannerSpacing: {
     marginBottom: spacing.md,
   },
@@ -259,11 +240,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.xs,
   },
   visibilityText: {
-    fontSize: typography.caption,
-    fontWeight: '600',
+    fontSize: typography.label,
+    fontWeight: '700',
   },
   submit: {
-    marginTop: spacing.sm,
+    marginTop: spacing.xs,
   },
   dividerRow: {
     alignItems: 'center',

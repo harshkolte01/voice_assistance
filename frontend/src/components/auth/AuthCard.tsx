@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { useAppTheme } from '../../design/ThemeProvider';
 import { radii, shadows, spacing } from '../../design/tokens';
@@ -23,7 +23,10 @@ export function AuthCard({ children, style }: AuthCardProps) {
         style,
       ]}
     >
-      {/* Subtle atmospheric ambient glow inside card corner */}
+      <View
+        pointerEvents="none"
+        style={[styles.accent, { backgroundColor: colors.primary }]}
+      />
       <View
         pointerEvents="none"
         style={[
@@ -38,7 +41,7 @@ export function AuthCard({ children, style }: AuthCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    borderRadius: radii.xl,
+    borderRadius: radii.lg,
     borderWidth: 1,
     elevation: 4,
     overflow: 'hidden',
@@ -46,13 +49,20 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '100%',
   },
+  accent: {
+    height: 3,
+    left: spacing.lg,
+    position: 'absolute',
+    top: 0,
+    width: 46,
+  },
   ambientGlow: {
     borderRadius: radii.full,
-    height: 120,
-    opacity: 0.22,
+    height: 110,
+    opacity: 0.14,
     position: 'absolute',
-    right: -40,
-    top: -40,
-    width: 120,
+    right: -48,
+    top: -54,
+    width: 110,
   },
 });

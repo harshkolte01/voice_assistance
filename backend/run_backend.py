@@ -1,31 +1,44 @@
+"""
+Backend startup wrapper that ensures clean environment.
+Only .env file values are used, no inherited environment variables.
+"""
 import os
-import subprocess
 import sys
 
-# Set unbuffered environment variable
-os.environ["PYTHONUNBUFFERED"] = "1"
+# List of environment variables that should NOT override .env file
+ENV_VARS_TO_CLEAR = [
+    "STT_API_URL",
+    "STT_API_KEY",
+    "EMBEDDING_API_URL",
+    "RERANK_API_URL",
+    "LLM_API_KEY",
+    "DATABASE_URL",
+    "REDIS_URL",
+    "JWT_SECRET_KEY",
+]
 
-print("Starting backend subprocess...")
-with open("uvicorn.log", "w", encoding="utf-8", buffering=1) as f:
-    p = subprocess.Popen(
-        [
-            r"..\.venv\Scripts\python.exe",
-            "-u",
-            "-m",
-            "uvicorn",
-            "app.main:app",
-            "--app-dir",
-            ".",
-            "--port",
-            "8000",
-        ],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT,
-        text=True,
-    )
-    # Forward all output to the log file and stdout
-    for line in p.stdout:
-        f.write(line)
-        f.flush()
-        sys.stdout.write(line)
-        sys.stdout.flush()
+# Clear any existing environment variables that might override .env
+cleared = []
+for var in ENV_VARS_TO_CLEAR:
+    if var in os.environ:
+        del os.environ[var]
+        cleared.append(var)
+
+if cleared:
+    print(f"✓ Cleared {len(cleared)} environment variable(s): {', '.join(cleared)}")
+    print("  Backend will read these from .env file instead.")
+    print()
+
+print("=" * 60)
+print("Starting Voice Assistance Backend")
+print("=" * 60)
+print(f"Configuration loaded from: .env file")
+print(f"Working directory: {os.getcwd()}")
+print("=" * 60)
+print()
+
+# Now start uvicorn with clean environment
+import uvicorn
+
+if __name__ == "__main__":
+    uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=False)
